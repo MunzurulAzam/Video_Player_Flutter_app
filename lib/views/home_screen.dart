@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:qtecsolutiontask/components.dart';
+import 'package:video_player/video_player.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -9,6 +10,20 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  late VideoPlayerController _videoPlayerController;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    _videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(
+        'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4'))
+      ..initialize().then((_) {
+        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+        setState(() {});
+      });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,17 +31,27 @@ class _HomeScreenState extends State<HomeScreen> {
           title: const Text('Play List'),
         ),
         body: ListView.builder(
-          itemCount: 10, //...................................................... for test
+          itemCount: 10, //.......................................................... for test
           itemBuilder: (BuildContext context, int index) => Column(
             children: [
               Stack(
                 children: [
-                  Image.network(
-                    // todo ...................................... set value from api with video player package
-                    'https://www.leadquizzes.com/images/youtube-logo.png',
+                  // Image.network(
+                  //   // todo ...................................... set value from api with video player package
+                  //   'https://www.leadquizzes.com/images/youtube-logo.png',
+                  //   height: defaultPadding * 8.5,
+                  //   width: double.infinity,
+                  //   fit: BoxFit.cover,
+                  // ),
+                  Container(
                     height: defaultPadding * 8.5,
                     width: double.infinity,
-                    fit: BoxFit.cover,
+                    child: _videoPlayerController.value.isInitialized
+                        ? AspectRatio(
+                      aspectRatio: _videoPlayerController.value.aspectRatio,
+                      child: VideoPlayer(_videoPlayerController),
+                    )
+                        : Container(),
                   ),
                   Positioned(
                     bottom: defaultPadding / 3,
@@ -93,5 +118,11 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ));
+  }
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _videoPlayerController.dispose();
   }
 }

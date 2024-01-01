@@ -4,7 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 
 //! ------------------------------------------------------------------------------------------------ Company Information
 const projectName = "QtecSolution";
-
+// ------------------------------------------------------base link
+const baseLink = "https://www.pqstec.com/DemoPOS/Values/";
 
 //! ------------------------------------------------------------------------------------------------ Sizes
 const baseScreenSize = Size(360, 800);
