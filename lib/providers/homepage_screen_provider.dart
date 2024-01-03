@@ -40,7 +40,6 @@ class HomePageScreenProvider extends ChangeNotifier {
   Future<void> fetchTrendingVideos({int page = 1}) async {
     try {
       _isLoading = true;
-      notifyListeners();
 
       final PlayList playlist = await _apiServices.fetchTrendingVideos(page);
       _videoList.addAll(playlist.results ?? []);
