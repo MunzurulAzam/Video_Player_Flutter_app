@@ -2,16 +2,18 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
-import 'package:get/get_instance/src/bindings_interface.dart';
+import 'package:provider/provider.dart';
+import 'package:qtecsolutiontask/providers/homepage_screen_provider.dart';
 import 'package:qtecsolutiontask/views/home_screen.dart';
 import 'package:qtecsolutiontask/views/video_details_screen.dart';
 
 import 'components.dart';
-import 'controllers/data_controller.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(ChangeNotifierProvider(
+    create: (context) => HomePageScreenProvider(),
+      child: const MyApp())
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -26,28 +28,25 @@ class MyApp extends StatelessWidget {
       splitScreenMode: true,
       ensureScreenSize: true,
       builder: (context, child) =>
-          GetMaterialApp(
+          MaterialApp(
             theme: lightTheme,
             debugShowCheckedModeBanner: false,
-            initialBinding: InitializedBinding(),
             scrollBehavior: const MaterialScrollBehavior().copyWith(dragDevices: {
               PointerDeviceKind.mouse,
               PointerDeviceKind.touch,
             }),
             darkTheme: darkTheme,
-            home: AnnotatedRegion<SystemUiOverlayStyle>(
-              value: SystemUiOverlayStyle.light.copyWith(statusBarColor: Colors.transparent),
-              child: child!,
-            ),
+            // home: AnnotatedRegion<SystemUiOverlayStyle>(
+            //   value: SystemUiOverlayStyle.light.copyWith(statusBarColor: Colors.transparent),
+            //   child: child ??  const SizedBox(),
+            // ),
+            initialRoute: HomeScreen.routeName,
+            routes: {
+              HomeScreen.routeName : (context) => const HomeScreen(),
+              VideoDetailScreen.routeName : (context) =>  VideoDetailScreen(),
+            },
           ),
-      child: const HomeScreen(),
     );
-  }
-}
-class InitializedBinding extends Bindings {
-  @override
-  void dependencies() {
-    Get.put(DataController());
   }
 }
 
